@@ -28,7 +28,7 @@ def read_root() -> dict:
 @app.get("/authors/", response_model=list[schemas.Author])
 def get_authors(skip: int = 0,
                 limit: int = 10,
-                db: Session = Depends(get_db)) -> schemas.Author:
+                db: Session = Depends(get_db)) -> list | None:
     return crud.get_all_authors(db=db, skip=skip, limit=limit)
 
 
@@ -54,14 +54,14 @@ def create_author(
 
 @app.get("/books/", response_model=list[schemas.Book])
 def get_books_list(skip: int = 0, limit: int = 10,
-                   db: Session = Depends(get_db)) -> schemas.Book:
+                   db: Session = Depends(get_db)) -> list | None:
     return crud.get_all_books(db=db, skip=skip, limit=limit)
 
 
 @app.get("/books/{author_id}/", response_model=list[schemas.Book])
 def get_books_by_author(author_id: int,
                         skip: int = 0, limit: int = 10,
-                        db: Session = Depends(get_db)) -> schemas.Book:
+                        db: Session = Depends(get_db)) -> list | None:
     db_record = crud.get_author(db=db, author_id=author_id)
     if not db_record:
         raise HTTPException(
